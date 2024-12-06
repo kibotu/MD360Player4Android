@@ -91,3 +91,16 @@ android {
 dependencies {
     coreLibraryDesugaring desugaring.jdk
 }
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = "com.github.kibotu"
+                artifactId = 'MD360Player4Android'
+                version = VERSION_NAME
+            }
+        }
+    }
+}
