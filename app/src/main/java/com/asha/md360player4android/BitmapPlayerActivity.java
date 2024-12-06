@@ -5,19 +5,18 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import androidx.annotation.DrawableRes;
 import android.util.Log;
 import android.view.View;
 
-import com.asha.vrlib.MD360Renderer;
 import com.asha.vrlib.MDVRLibrary;
 import com.asha.vrlib.model.MDRay;
 import com.asha.vrlib.plugins.hotspot.IMDHotspot;
 import com.asha.vrlib.texture.MD360BitmapTexture;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-
-import androidx.annotation.DrawableRes;
 
 import static com.squareup.picasso.MemoryPolicy.NO_CACHE;
 import static com.squareup.picasso.MemoryPolicy.NO_STORE;
@@ -44,33 +43,11 @@ public class BitmapPlayerActivity extends MD360PlayerActivity {
                 getVRLibrary().notifyPlayerChanged();
             }
         });
-
-        findViewById(R.id.screenshot).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                busy();
-                Log.v(TAG, "[takeScreenshot] start");
-                getVRLibrary().renderer.takeScreenshot(new MD360Renderer.ScreenshotListener() {
-                    @Override
-                    public void onScreenshot(Bitmap bitmap) {
-                        Log.v(TAG, "[takeScreenshot] bitmap width=" + bitmap.getWidth() + " height=" + bitmap.getHeight());
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                cancelBusy();
-                            }
-                        });
-                    }
-                });
-            }
-        });
-
-
     }
 
     private Target mTarget;// keep the reference for picasso.
 
-    private void loadImage(Uri uri, final MD360BitmapTexture.Callback callback) {
+    private void loadImage(Uri uri, final MD360BitmapTexture.Callback callback){
         mTarget = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -97,15 +74,15 @@ public class BitmapPlayerActivity extends MD360PlayerActivity {
         Log.d(TAG, "load image with max texture size:" + callback.getMaxTextureSize());
         Picasso.with(getApplicationContext())
                 .load(uri)
-                .resize(callback.getMaxTextureSize(), callback.getMaxTextureSize())
+                .resize(callback.getMaxTextureSize(),callback.getMaxTextureSize())
                 .onlyScaleDown()
                 .centerInside()
                 .memoryPolicy(NO_CACHE, NO_STORE)
                 .into(mTarget);
     }
 
-    private Uri currentUri() {
-        if (nextUri == null) {
+    private Uri currentUri(){
+        if (nextUri == null){
             return getUri();
         } else {
             return nextUri;
@@ -126,16 +103,16 @@ public class BitmapPlayerActivity extends MD360PlayerActivity {
                 .listenTouchPick(new MDVRLibrary.ITouchPickListener() {
                     @Override
                     public void onHotspotHit(IMDHotspot hitHotspot, MDRay ray) {
-                        Log.d(TAG, "Ray:" + ray + ", hitHotspot:" + hitHotspot);
+                        Log.d(TAG,"Ray:" + ray + ", hitHotspot:" + hitHotspot);
                     }
                 })
                 .pinchEnabled(true)
                 .projectionFactory(new CustomProjectionFactory())
-                .build(findViewById(R.id.gl_view));
+                .build((GLSurfaceView) findViewById(R.id.gl_view));
     }
 
-    private Uri getDrawableUri(@DrawableRes int resId) {
+    private Uri getDrawableUri(@DrawableRes int resId){
         Resources resources = getResources();
-        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(resId) + '/' + resources.getResourceTypeName(resId) + '/' + resources.getResourceEntryName(resId));
+        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(resId) + '/' + resources.getResourceTypeName(resId) + '/' + resources.getResourceEntryName(resId) );
     }
 }

@@ -8,6 +8,10 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import androidx.annotation.DrawableRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +27,6 @@ import com.squareup.picasso.Target;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.DrawableRes;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 public class RecyclerViewActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -41,15 +40,14 @@ public class RecyclerViewActivity extends AppCompatActivity {
         context.startActivity(i);
     }
 
-    public RecyclerViewActivity() {
-    }
+    public RecyclerViewActivity() {}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sMockData = new Uri[]{
+        sMockData = new Uri[] {
                 getDrawableUri(R.drawable.bitmap360)
-                , getDrawableUri(R.drawable.texture)
+                ,getDrawableUri(R.drawable.texture)
         };
 
         setContentView(R.layout.activity_main);
@@ -184,9 +182,9 @@ public class RecyclerViewActivity extends AppCompatActivity {
         }
     }
 
-    private Uri getDrawableUri(@DrawableRes int resId) {
+    private Uri getDrawableUri(@DrawableRes int resId){
         Resources resources = getResources();
-        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(resId) + '/' + resources.getResourceTypeName(resId) + '/' + resources.getResourceEntryName(resId));
+        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(resId) + '/' + resources.getResourceTypeName(resId) + '/' + resources.getResourceEntryName(resId) );
     }
 
     private class FeedAdapter extends RecyclerView.Adapter<FeedVH> {
