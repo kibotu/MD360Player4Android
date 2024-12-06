@@ -4,14 +4,13 @@ import android.content.ContentResolver;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import androidx.annotation.DrawableRes;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.annotation.DrawableRes;
-import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Created by hzqiujiadi on 16/1/26.
@@ -75,7 +74,7 @@ public class DemoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String url = et.getText().toString();
-                if (!TextUtils.isEmpty(url)) {
+                if (!TextUtils.isEmpty(url)){
                     MD360PlayerActivity.startVideo(DemoActivity.this, Uri.parse(url));
                 } else {
                     Toast.makeText(DemoActivity.this, "empty url!", Toast.LENGTH_SHORT).show();
@@ -87,7 +86,7 @@ public class DemoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String url = et.getText().toString();
-                if (!TextUtils.isEmpty(url)) {
+                if (!TextUtils.isEmpty(url)){
                     MD360PlayerActivity.startBitmap(DemoActivity.this, Uri.parse(url));
                 } else {
                     Toast.makeText(DemoActivity.this, "empty url!", Toast.LENGTH_SHORT).show();
@@ -99,7 +98,7 @@ public class DemoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String url = et.getText().toString();
-                if (!TextUtils.isEmpty(url)) {
+                if (!TextUtils.isEmpty(url)){
                     IjkPlayerDemoActivity.start(DemoActivity.this, Uri.parse(url));
                 } else {
                     Toast.makeText(DemoActivity.this, "empty url!", Toast.LENGTH_SHORT).show();
@@ -124,8 +123,8 @@ public class DemoActivity extends AppCompatActivity {
         });
     }
 
-    private Uri getDrawableUri(@DrawableRes int resId) {
+    private Uri getDrawableUri(@DrawableRes int resId){
         Resources resources = getResources();
-        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(resId) + '/' + resources.getResourceTypeName(resId) + '/' + resources.getResourceEntryName(resId));
+        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(resId) + '/' + resources.getResourceTypeName(resId) + '/' + resources.getResourceEntryName(resId) );
     }
 }

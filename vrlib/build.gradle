@@ -1,24 +1,93 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'maven-publish'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    namespace "com.asha.vrlib"
+    compileSdk compileSdkVer
+    buildToolsVersion = buildToolsVer
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 28
-        versionCode 6
-        versionName "1.0.1"
+        minSdk minSdkVer
+        targetSdk targetSdkVer
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+
+        consumerProguardFiles "consumer-rules.pro"
     }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    // region java compile options
+
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
+    }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    // endregion
+
+    // region kotlin compile options
+
+    kotlinOptions {
+        jvmTarget = "17"
+        allWarningsAsErrors = false
+        kotlinOptions.verbose = true
+
+        //## Hint: https://kotlinlang.org/docs/reference/java-to-kotlin-interop.html#default-methods-in-interfaces
+        //## Hint: "-Xjvm-default=all-compatibility" and "-Xjvm-default=all-compatibility" will also work.
+        freeCompilerArgs += [
+                "-Xjvm-default=all-compatibility",
+                // disable linting for opt-in annotations
+                "-opt-in=kotlin.RequiresOptIn"
+        ]
+    }
+
+    // endregion
+
+    // region lint options
+
+    lint {
+        disable 'TypographyFractions', 'TypographyQuotes', 'InvalidPackage'
+        enable 'RtlHardcoded', 'RtlCompat', 'RtlEnabled'
+        checkOnly 'NewApi', 'InlinedApi'
+        quiet true
+        abortOnError false
+        ignoreWarnings true
+        checkDependencies true
+        ignoreTestSources true
+        checkAllWarnings false
+    }
+
+    // endregion
+
+    // region exclude duplicated meta inf files
+
+    packagingOptions {
+        // DebugProbesKt.bin is used for java debugging (not needed for android)
+        // Hint: https://github.com/Kotlin/kotlinx.coroutines/issues/2274
+        exclude 'DebugProbesKt.bin'
+
+        // https://stackoverflow.com/a/61893957/1006741
+        excludes -= "/META-INF/*.kotlin_module"
+    }
+
+    // endregion
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    testImplementation 'junit:junit:4.12'
+    coreLibraryDesugaring desugaring.jdk
 }

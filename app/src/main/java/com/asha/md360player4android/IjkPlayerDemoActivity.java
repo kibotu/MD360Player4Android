@@ -6,14 +6,13 @@ import android.content.Intent;
 import android.graphics.SurfaceTexture;
 import android.net.Uri;
 import android.os.Bundle;
+import androidx.annotation.Nullable;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import androidx.annotation.Nullable;
-import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 
 /**
@@ -24,7 +23,7 @@ public class IjkPlayerDemoActivity extends Activity implements TextureView.Surfa
 
     private Surface surface;
 
-    private MediaPlayerWrapper mMediaPlayerWrapper = new MediaPlayerWrapper();
+//    private MediaPlayerWrapper mMediaPlayerWrapper = new MediaPlayerWrapper();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,34 +37,34 @@ public class IjkPlayerDemoActivity extends Activity implements TextureView.Surfa
 
         setContentView(R.layout.activity_ijkdemo);
 
-        mMediaPlayerWrapper.init();
-        mMediaPlayerWrapper.setPreparedListener(new IMediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(IMediaPlayer mp) {
-                cancelBusy();
-            }
-        });
+//        mMediaPlayerWrapper.init();
+//        mMediaPlayerWrapper.setPreparedListener(new IMediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(IMediaPlayer mp) {
+//                cancelBusy();
+//            }
+//        });
 
         TextureView textureView = (TextureView) findViewById(R.id.video_view);
         textureView.setSurfaceTextureListener(this);
 
         Uri uri = getUri();
-        if (uri != null) {
-            mMediaPlayerWrapper.openRemoteFile(uri.toString());
-            mMediaPlayerWrapper.prepare();
+        if (uri != null){
+//            mMediaPlayerWrapper.openRemoteFile(uri.toString());
+//            mMediaPlayerWrapper.prepare();
         }
 
     }
 
-    public static void start(Context context, Uri uri) {
-        Intent i = new Intent(context, IjkPlayerDemoActivity.class);
+    public static void start(Context context, Uri uri){
+        Intent i = new Intent(context,IjkPlayerDemoActivity.class);
         i.setData(uri);
         context.startActivity(i);
     }
 
     protected Uri getUri() {
         Intent i = getIntent();
-        if (i == null || i.getData() == null) {
+        if (i == null || i.getData() == null){
             return null;
         }
         return i.getData();
@@ -74,7 +73,7 @@ public class IjkPlayerDemoActivity extends Activity implements TextureView.Surfa
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
         surface = new Surface(surfaceTexture);
-        mMediaPlayerWrapper.setSurface(surface);
+//        mMediaPlayerWrapper.setSurface(surface);
 
     }
 
@@ -85,7 +84,7 @@ public class IjkPlayerDemoActivity extends Activity implements TextureView.Surfa
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-        mMediaPlayerWrapper.setSurface(null);
+//        mMediaPlayerWrapper.setSurface(null);
         this.surface = null;
         return true;
     }
@@ -98,22 +97,22 @@ public class IjkPlayerDemoActivity extends Activity implements TextureView.Surfa
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mMediaPlayerWrapper.destroy();
+//        mMediaPlayerWrapper.destroy();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mMediaPlayerWrapper.pause();
+//        mMediaPlayerWrapper.pause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mMediaPlayerWrapper.resume();
+//        mMediaPlayerWrapper.resume();
     }
 
-    public void cancelBusy() {
+    public void cancelBusy(){
         findViewById(R.id.progress).setVisibility(View.GONE);
     }
 }
