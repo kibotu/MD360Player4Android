@@ -128,7 +128,58 @@ public class MD360Renderer implements GLSurfaceView.Renderer {
 		mMainLinePipe.commit(mWidth, mHeight, size);
 		glCheck("MD360Renderer onDrawFrame end. ");
 		// mFps.step();
+
+
+        if (screenshot) {
+            int screenshotSize = mWidth * mHeight;
+            Log.v(TAG, "screenshot width=" + mWidth + " height=" + mHeight);
+            ByteBuffer bb = ByteBuffer.allocateDirect(screenshotSize * 4);
+            bb.order(ByteOrder.nativeOrder());
+            glUnused.glReadPixels(0, 0, mWidth, mHeight, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, bb);
+            int pixelsBuffer[] = new int[screenshotSize];
+            bb.asIntBuffer().get(pixelsBuffer);
+            bb = null;
+            Bitmap bitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.RGB_565);
+            bitmap.setPixels(pixelsBuffer, screenshotSize - mWidth, -mWidth, 0, 0, mWidth, mHeight);
+            pixelsBuffer = null;
+
+            short sBuffer[] = new short[screenshotSize];
+            ShortBuffer sb = ShortBuffer.wrap(sBuffer);
+
+            sb.rewind();
+
+            bitmap.copyPixelsToBuffer(sb);
+
+            //Making created bitmap (from OpenGL points) compatible with Android bitmap
+            for (int i = 0; i < screenshotSize; ++i) {
+                short v = sBuffer[i];
+                sBuffer[i] = (short) (((v & 0x1f) << 11) | (v & 0x7e0) | ((v & 0xf800) >> 11));
+            }
+            sb.rewind();
+            bitmap.copyPixelsFromBuffer(sb);
+
+            lastScreenshot = bitmap;
+            screenshotListener.onScreenshot(lastScreenshot);
+            screenshotListener = null;
+
+            screenshot = false;
+        }
 	}
+
+    private Bitmap lastScreenshot;
+
+    private volatile boolean screenshot = false;
+
+    private ScreenshotListener screenshotListener;
+
+    public static interface ScreenshotListener {
+        void onScreenshot(Bitmap bitmap);
+    }
+
+    public void takeScreenshot(ScreenshotListener screenshotListener) {
+        this.screenshotListener = screenshotListener;
+        screenshot = true;
+    }
 
 	public static Builder with(Context context) {
 		Builder builder = new Builder();
