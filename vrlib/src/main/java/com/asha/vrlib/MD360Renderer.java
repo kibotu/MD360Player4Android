@@ -1,8 +1,10 @@
 package com.asha.vrlib;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 
 import com.asha.vrlib.common.Fps;
 import com.asha.vrlib.common.MDGLHandler;
@@ -13,6 +15,9 @@ import com.asha.vrlib.plugins.MDPluginManager;
 import com.asha.vrlib.strategy.display.DisplayModeManager;
 import com.asha.vrlib.strategy.projection.ProjectionModeManager;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.ShortBuffer;
 import java.util.List;
 
 import javax.microedition.khronos.egl.EGLConfig;
